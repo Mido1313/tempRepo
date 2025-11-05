@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: finance-api-config
+  namespace: finance
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  Keycloak__Authority: "https://auth.example.com/realms/finance"
+  Keycloak__ClientId: "finance-api"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: finance-frontend-config
+  namespace: finance
+data:
+  API_BASE_URL: "/api/v1"

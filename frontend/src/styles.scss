@@ -1,0 +1,38 @@
+$primary-color: #4f9fd8;
+$accent-color: #6bc4b8;
+$background-color: #f5f9fd;
+$font-stack: 'Segoe UI', 'Helvetica Neue', sans-serif;
+
+body {
+  margin: 0;
+  font-family: $font-stack;
+  background: $background-color;
+  color: #102542;
+}
+
+a {
+  color: $primary-color;
+}
+
+button {
+  background: $primary-color;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease-in-out;
+
+  &:hover {
+    background: darken($primary-color, 5%);
+  }
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 32px rgba(16, 37, 66, 0.08);
+  margin-bottom: 1.5rem;
+}
