@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -137,33 +136,16 @@ builder.Services.AddRateLimiter(options =>
         }));
 });
 
-var otlpEndpoint = builder.Configuration["OpenTelemetry:Endpoint"];
-
 builder.Services.AddOpenTelemetry()
-    .WithTracing(tracerProviderBuilder =>
-    {
-        tracerProviderBuilder
-            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("finance-api"))
-            .AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation()
-            .AddOtlpExporter(options => ConfigureOtlp(options, otlpEndpoint));
-    })
-    .WithMetrics(metricsBuilder =>
-    {
-        metricsBuilder
-            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("finance-api"))
-            .AddAspNetCoreInstrumentation()
-            .AddRuntimeInstrumentation()
-            .AddOtlpExporter(options => ConfigureOtlp(options, otlpEndpoint));
-    });
-
-static void ConfigureOtlp(OtlpExporterOptions options, string? endpoint)
-{
-    if (!string.IsNullOrWhiteSpace(endpoint) && Uri.TryCreate(endpoint, UriKind.Absolute, out var uri))
-    {
-        options.Endpoint = uri;
-    }
-}
+    .WithTracing(tracerProviderBuilder => tracerProviderBuilder
+        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("finance-api"))
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddEntityFrameworkCoreInstrumentation())
+    .WithMetrics(metricsBuilder => metricsBuilder
+        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("finance-api"))
+        .AddAspNetCoreInstrumentation()
+        .AddRuntimeInstrumentation());
 
 builder.Services.AddResponseCompression();
 

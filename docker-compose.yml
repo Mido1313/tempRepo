@@ -1,3 +1,4 @@
+version: '3.9'
 services:
   db:
     image: postgres:16
@@ -28,7 +29,6 @@ services:
       ConnectionStrings__Default: Host=db;Database=finance;Username=finance;Password=finance
       Keycloak__Authority: http://keycloak:8080/realms/finance
       Keycloak__ClientId: finance-api
-      OpenTelemetry__Endpoint: http://seq:4317
     depends_on:
       - db
       - keycloak
@@ -43,7 +43,7 @@ services:
     ports:
       - "4200:80"
   seq:
-    image: datalust/seq:latest
+    image: datalust/seq:2023.4
     environment:
       ACCEPT_EULA: 'Y'
     ports:

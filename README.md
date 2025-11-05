@@ -36,7 +36,6 @@ npm start
 docker compose up --build
 ```
 API will be available on `http://localhost:8080` and the Angular app on `http://localhost:4200`.
-If you encounter `401 Unauthorized` when pulling base images, run `docker login` to authenticate with Docker Hub before building.
 
 ## Testing
 Run backend and frontend tests with:
