@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: finance-postgres
+  namespace: finance
+spec:
+  serviceName: finance-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finance-postgres
+  template:
+    metadata:
+      labels:
+        app: finance-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          env:
+            - name: POSTGRES_DB
+              value: finance
+            - name: POSTGRES_USER
+              value: finance
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: finance-api-secrets
+                  key: Postgres__Password
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: finance-postgres
+  namespace: finance
+spec:
+  clusterIP: None
+  selector:
+    app: finance-postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
